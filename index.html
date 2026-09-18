@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>breakevery — 开源组织</title>
+<style>
+  :root {
+    --bg: #0a0c10;
+    --surface: #12161d;
+    --surface-2: #1a2029;
+    --border: #232b36;
+    --text: #e6edf3;
+    --text-dim: #8b949e;
+    --accent: #58a6ff;
+    --accent-2: #3fb950;
+    --rust: #dea584;
+    --csharp: #178600;
+    --radius: 12px;
+    --max: 1100px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  .container { max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- NAV ---------- */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    backdrop-filter: blur(12px);
+    background: rgba(10, 12, 16, .82);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+  }
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: -.02em;
+  }
+  .nav-brand svg { width: 28px; height: 28px; }
+  .nav-links { display: flex; gap: 22px; font-size: .875rem; color: var(--text-dim); }
+  .nav-links a:hover { color: var(--text); }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 96px 0 72px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: -200px; left: 50%;
+    transform: translateX(-50%);
+    width: 700px; height: 500px;
+    background: radial-gradient(ellipse, rgba(88,166,255,.09) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-inner { position: relative; text-align: center; }
+  .hero-avatar {
+    width: 80px; height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #1f6feb, #3fb950);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 24px;
+    box-shadow: 0 0 0 1px rgba(255,255,255,.06), 0 8px 32px rgba(31,111,235,.25);
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -.03em;
+    margin-bottom: 12px;
+  }
+  .hero p {
+    color: var(--text-dim);
+    font-size: 1.05rem;
+    max-width: 560px;
+    margin: 0 auto 32px;
+  }
+  .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-size: .9rem;
+    font-weight: 600;
+    transition: .2s;
+    border: 1px solid transparent;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #0a0c10;
+  }
+  .btn-primary:hover { background: #79b8ff; }
+  .btn-ghost {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text);
+  }
+  .btn-ghost:hover { border-color: var(--text-dim); background: var(--surface); }
+
+  /* ---------- STATS ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin: 0 auto 80px;
+    max-width: 720px;
+  }
+  .stat {
+    background: var(--surface);
+    padding: 24px 16px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--text);
+  }
+  .stat-label {
+    font-size: .78rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin-top: 4px;
+  }
+
+  /* ---------- SECTION ---------- */
+  .section { padding: 0 0 80px; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .section-head h2 {
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -.02em;
+  }
+  .section-head span { font-size: .85rem; color: var(--text-dim); }
+
+  /* ---------- PROJECTS ---------- */
+  .projects { display: grid; gap: 14px; }
+  .project {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    transition: .25s;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 16px;
+    align-items: start;
+  }
+  .project:hover {
+    border-color: #303a48;
+    background: var(--surface-2);
+    transform: translateY(-1px);
+  }
+  .project-name {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .project-name .tag {
+    font-size: .68rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    letter-spacing: .02em;
+  }
+  .project-desc {
+    color: var(--text-dim);
+    font-size: .88rem;
+    line-height: 1.55;
+    max-width: 620px;
+  }
+  .project-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    font-size: .8rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .lang {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lang-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+  }
+  .dot-rust { background: var(--rust); }
+  .dot-csharp { background: var(--csharp); }
+  .project-stats {
+    display: flex;
+    gap: 14px;
+    font-size: .78rem;
+  }
+  .project-stats span { display: flex; align-items: center; gap: 4px; }
+
+  /* ---------- LANGUAGES BAR ---------- */
+  .lang-bar-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 26px;
+    margin-top: 48px;
+  }
+  .lang-bar-wrap h3 {
+    font-size: .9rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .lang-bar {
+    display: flex;
+    height: 10px;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .lang-bar-seg-rust { background: var(--rust); width: 55%; }
+  .lang-bar-seg-csharp { background: var(--csharp); width: 45%; }
+  .lang-legend {
+    display: flex;
+    gap: 24px;
+    font-size: .82rem;
+    color: var(--text-dim);
+  }
+  .lang-legend span { display: flex; align-items: center; gap: 6px; }
+
+  /* ---------- FOOTER ---------- */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 0 48px;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: .82rem;
+  }
+  footer a { color: var(--accent); }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 640px) {
+    .hero { padding: 72px 0 56px; }
+    .project { grid-template-columns: 1fr; }
+    .project-meta { flex-direction: row; align-items: center; justify-content: space-between; width: 100%; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <div class="container">
+    <div class="nav-brand">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="2" stroke-linecap="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+      breakevery
+    </div>
+    <div class="nav-links">
+      <a href="#projects">项目</a>
+      <a href="#languages">语言</a>
+      <a href="https://github.com/breakevery" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="container hero-inner">
+    <div class="hero-avatar">B</div>
+    <h1>breakevery</h1>
+    <p>构建工具与基础设施 — AI 原生沙箱、嵌入式 IDE，以及让开发者保持掌控的开源软件。</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="https://github.com/breakevery" target="_blank" rel="noopener">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.21 3.44 9.63 8.21 11.19.6.11.82-.25.82-.56v-2.17c-3.34.71-4.04-1.58-4.04-1.58-.55-1.36-1.34-1.73-1.34-1.73-1.09-.73.08-.72.08-.72 1.2.08 1.84 1.21 1.84 1.21 1.07 1.79 2.81 1.27 3.5.97.11-.76.42-1.27.76-1.56-2.67-.3-5.47-1.3-5.47-5.78 0-1.28.47-2.32 1.23-3.14-.12-.29-.53-1.48.12-3.09 0 0 1-.31 3.28 1.19a11.6 11.6 0 0 1 5.98 0c2.28-1.5 3.28-1.19 3.28-1.19.65 1.61.24 2.8.12 3.09.77.82 1.23 1.86 1.23 3.14 0 4.49-2.81 5.48-5.49 5.77.43.36.81 1.07.81 2.17v3.22c0 .31.22.68.83.56C20.57 21.91 24 17.5 24 12.29 24 5.78 18.63.5 12 .5z"/></svg>
+        查看 GitHub
+      </a>
+      <a class="btn btn-ghost" href="#projects">浏览项目</a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== STATS ===== -->
+<div class="container">
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-value">4</div>
+      <div class="stat-label">公开仓库</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">2</div>
+      <div class="stat-label">主要语言</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">Apache-2.0</div>
+      <div class="stat-label">许可证</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">2026</div>
+      <div class="stat-label">最近活跃</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROJECTS ===== -->
+<section class="section" id="projects">
+  <div class="container">
+    <div class="section-head">
+      <h2>项目</h2>
+      <span>4 个公开仓库</span>
+    </div>
+    <div class="projects">
+
+      <!-- RiscDom -->
+      <a class="project" href="https://github.com/breakevery/riscdom" target="_blank" rel="noopener">
+        <div>
+          <div class="project-name">
+            riscdom
+            <span class="tag">旗舰项目</span>
+          </div>
+          <div class="project-desc">
+            AI 原生的桌面 RISC-V 沙箱 — 在 QEMU 中提供虚拟内核级特权，完全可审计、可回滚，人类保留 root 权限。
+          </div>
+        </div>
+        <div class="project-meta">
+          <div class="lang">
+            <span class="lang-dot dot-rust"></span>
+            Rust
+          </div>
+          <div class="project-stats">
+            <span>★ 1</span>
+            <span>⑂ 1</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- WFU -->
+      <a class="project" href="https://github.com/breakevery/wfu" target="_blank" rel="noopener">
+        <div>
+          <div class="project-name">wfu</div>
+          <div class="project-desc">
+            基于 WebView 的 IDE，用于在 Unity C# 应用程序内部构建嵌入式小程序。轻量、可插拔，内核极简。
+          </div>
+        </div>
+        <div class="project-meta">
+          <div class="lang">
+            <span class="lang-dot dot-csharp"></span>
+            C#
+          </div>
+          <div class="project-stats">
+            <span>★ 0</span>
+            <span>⑂ 2</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- wfuexe -->
+      <a class="project" href="https://github.com/breakevery/wfuexe" target="_blank" rel="noopener">
+        <div>
+          <div class="project-name">
+            wfuexe
+            <span class="tag">二进制发行</span>
+          </div>
+          <div class="project-desc">
+            WFU 的预编译二进制发行版 — 仅托管 Release 包，源码位于 wfu 仓库。
+          </div>
+        </div>
+        <div class="project-meta">
+          <div class="lang">
+            <span class="lang-dot dot-csharp"></span>
+            C#
+          </div>
+          <div class="project-stats">
+            <span>★ 0</span>
+            <span>⑂ 0</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== LANGUAGES ===== -->
+<section class="section" id="languages">
+  <div class="container">
+    <div class="lang-bar-wrap">
+      <h3>语言构成</h3>
+      <div class="lang-bar">
+        <div class="lang-bar-seg-rust"></div>
+        <div class="lang-bar-seg-csharp"></div>
+      </div>
+      <div class="lang-legend">
+        <span><span class="lang-dot dot-rust" style="width:10px;height:10px;border-radius:50%;display:inline-block;"></span> Rust</span>
+        <span><span class="lang-dot dot-csharp" style="width:10px;height:10px;border-radius:50%;display:inline-block;"></span> C#</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="container">
+    <p>
+      <a href="https://github.com/breakevery" target="_blank" rel="noopener">github.com/breakevery</a>
+      &nbsp;·&nbsp; 页面仅为静态展示，数据来源于 GitHub 公开信息
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>
